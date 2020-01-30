@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Sound testing - Ironhack</title>
+  </head>
+  <body>
+    <nav>
+      <button id="play" disabled>Play</button>
+      <button id="stop" disabled>Stop</button>
+      <button id="pause" disabled>Pause</button>
+      <button id="resume" disabled>Resume</button>
+      <button id="fade" disabled>Fade</button>
+    </nav>
+    <script src="howler.js"></script>
+    <script>
+      //create as many instances of Howl as you need
+      //for multiple sounds
+      let sound = new Howl({
+        src: ["example.mp3"],
+        autoplay: false,
+        loop: true,
+        volume: 1,
+        onend: function() {
+          console.log("Finished!");
+        }
+      });
+
+      // Clear listener after first call.
+      let seekID;
+      let playID;
+
+      //this will trigger once the sound has been fully loaded by the browser
+      sound.once("load", function() {
+        //this reenables the buttons only when the sound is ready to be played
+        document.getElementById("play").removeAttribute("disabled");
+        document.getElementById("stop").removeAttribute("disabled");
+        document.getElementById("pause").removeAttribute("disabled");
+        document.getElementById("resume").removeAttribute("disabled");
+        document.getElementById("fade").removeAttribute("disabled");
+
+        document.getElementById("play").onclick = function() {
+          playID = sound.play();
+        };
+
+        document.getElementById("stop").onclick = function() {
+          sound.stop();
+        };
+
+        document.getElementById("pause").onclick = function() {
+          seekID = sound.pause();
+        };
+
+        document.getElementById("resume").onclick = function() {
+          sound.play();
+          sound.seek(seekID, playID);
+        };
+
+        document.getElementById("fade").onclick = function() {
+          sound.fade(1, 0, 2000);
+        };
+      });
+    </script>
+  </body>
+</html>
